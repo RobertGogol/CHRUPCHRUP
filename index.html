@@ -36,16 +36,21 @@
         let cursors;
         let sandwiches;
         let smartphones;
+        let platforms;
 
         function preload() {
             this.load.image('background', 'assets/tlo.png'); // Wczytanie tła
             this.load.image('sandwich', 'assets/sandwich.png'); // Kanapka
             this.load.image('smartphone', 'assets/smartphone.png'); // Smartfon
+            this.load.image('platform', 'assets/platform.png'); // Platformy do stania
             this.load.spritesheet('student', 'assets/student.png', { frameWidth: 32, frameHeight: 32 });
         }
 
         function create() {
             this.add.image(400, 300, 'background').setScale(1.5);
+            
+            platforms = this.physics.add.staticGroup();
+            platforms.create(400, 580, 'platform').setScale(2).refreshBody();
             
             player = this.physics.add.sprite(100, 450, 'student');
             player.setBounce(0.2);
@@ -61,8 +66,11 @@
             
             smartphones = this.physics.add.group();
             
+            this.physics.add.collider(player, platforms);
             this.physics.add.collider(player, sandwiches, collectSandwich, null, this);
             this.physics.add.collider(player, smartphones, hitSmartphone, null, this);
+            this.physics.add.collider(sandwiches, platforms);
+            this.physics.add.collider(smartphones, platforms);
         }
 
         function update() {
